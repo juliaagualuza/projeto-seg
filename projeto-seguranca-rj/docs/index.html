@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análise Temporal e Espacial da Criminalidade no RJ (2014–2026)</title>
+<style>
+:root{--ink:#172033;--muted:#5b6475;--line:#dce2ea;--accent:#2457a7;--bg:#f5f7fb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 Arial,sans-serif}
+main{max-width:960px;margin:36px auto;padding:42px;background:white;border:1px solid var(--line);border-radius:14px}
+h1{font-size:2.1rem;line-height:1.2}h2{margin-top:34px;border-bottom:1px solid var(--line);padding-bottom:8px}
+p,li{color:#283247}.meta,.note{color:var(--muted)}.note{background:#f1f5fb;padding:14px;border-left:4px solid var(--accent)}
+table{width:100%;border-collapse:collapse;margin:18px 0}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{background:#f1f5fb}
+a{color:var(--accent)}code{background:#f1f3f6;padding:2px 5px;border-radius:4px}
+@media(max-width:650px){main{margin:0;padding:22px;border:0;border-radius:0}h1{font-size:1.7rem}}
+</style>
+</head>
+<body><main>
+<p class="meta">ARTIGO ACADÊMICO · SISTEMAS DE INFORMAÇÃO · UNILASALLE</p>
+<h1>Análise Temporal e Espacial da Criminalidade no Estado do Rio de Janeiro (2014–2026)</h1>
+<p class="meta">Projeto da disciplina Linguagem de Programação — Análise e Visualização de Dados com Python</p>
+
+<h2>Resumo</h2>
+<p>Este trabalho propõe uma análise exploratória temporal e espacial dos registros de ocorrências no Estado do Rio de Janeiro, utilizando dados municipais mensais disponibilizados pelo Instituto de Segurança Pública (ISP-RJ). O recorte contempla os anos de 2014 a 2026, observando-se que 2026 contém somente os meses de janeiro a setembro na versão da base utilizada. A metodologia envolve leitura da planilha oficial, padronização de nomes de colunas, remoção de registros duplicados, agregações por ano, município e região e elaboração de visualizações com Python. Os resultados preliminares indicam variação no volume anual de registros, com aumento expressivo nos anos mais recentes do período completo. A distribuição espacial também é concentrada: a capital apresenta o maior total acumulado entre os municípios. Ressalta-se que os números representam contagens absolutas de registros, não taxas populacionais nem quantidade de vítimas únicas. A análise busca demonstrar como técnicas de ETL e análise exploratória podem apoiar a compreensão de padrões agregados, sem atribuir causalidade às variações observadas.</p>
+<p><strong>Palavras-chave:</strong> Segurança pública; análise exploratória; Python; dados abertos; Rio de Janeiro.</p>
+
+<h2>1. Introdução</h2>
+<p>A disponibilidade de dados públicos permite investigar a distribuição e a evolução dos registros de segurança pública. Entretanto, a interpretação exige atenção à unidade de medida, à cobertura temporal e às diferenças entre municípios. Este estudo utiliza a base municipal mensal do ISP-RJ para organizar e explorar esses registros.</p>
+<p>As perguntas de pesquisa são: (RQ1) como evoluíram os registros anuais entre 2014 e 2025? (RQ2) quais municípios concentram os maiores totais no período? (RQ3) como os registros se distribuem entre as regiões do estado?</p>
+
+<h2>2. Metodologia</h2>
+<p>Foi utilizada a planilha municipal mensal publicada pelo ISP-RJ. O processamento é realizado em Python, com a biblioteca Pandas. O ETL lê a planilha, padroniza os nomes das colunas, remove linhas duplicadas e exporta os dados tratados em CSV. A análise exploratória agrega os registros por ano, município e região.</p>
+<p class="note"><strong>Limitação temporal:</strong> 2026 contém apenas janeiro a setembro na base analisada e, portanto, não é diretamente comparável aos anos completos. As contagens também não são ajustadas pelo tamanho da população.</p>
+<h3>Trecho do processamento</h3>
+<pre><code>df = pd.read_excel("data/raw/BaseMunicipioMensal.xlsx")
+df.columns = df.columns.str.strip().str.lower()
+df = df.drop_duplicates()
+df.to_csv("data/processed/isp_rj_processed.csv",
+          index=False, encoding="utf-8")</code></pre>
+
+<h2>3. Resultados e discussão</h2>
+<p>Na extração analisada, o total anual de registros de ocorrências foi:</p>
+<table><thead><tr><th>Ano</th><th>Registros</th><th>Cobertura</th></tr></thead><tbody>
+<tr><td>2014</td><td>818.727</td><td>12 meses</td></tr>
+<tr><td>2015</td><td>777.356</td><td>12 meses</td></tr>
+<tr><td>2016</td><td>806.042</td><td>12 meses</td></tr>
+<tr><td>2017</td><td>750.607</td><td>12 meses</td></tr>
+<tr><td>2018</td><td>770.466</td><td>12 meses</td></tr>
+<tr><td>2019</td><td>781.522</td><td>12 meses</td></tr>
+<tr><td>2020</td><td>584.988</td><td>12 meses</td></tr>
+<tr><td>2021</td><td>620.557</td><td>12 meses</td></tr>
+<tr><td>2022</td><td>773.895</td><td>12 meses</td></tr>
+<tr><td>2023</td><td>814.984</td><td>12 meses</td></tr>
+<tr><td>2024</td><td>922.733</td><td>12 meses</td></tr>
+<tr><td>2025</td><td>965.208</td><td>12 meses</td></tr>
+<tr><td>2026</td><td>755.979</td><td>Jan–set (parcial)</td></tr>
+</tbody></table>
+<p>Entre os municípios, os maiores totais acumulados informados pela agregação realizada foram: Rio de Janeiro (4.991.884), Duque de Caxias (479.931), São Gonçalo (473.700), Nova Iguaçu (427.304) e Niterói (368.506). Esses valores são contagens absolutas e refletem também diferenças de população e volume de registros.</p>
+<p>Na distribuição regional, os totais observados foram: Capital (4.991.884), Interior (2.288.679), Baixada Fluminense (1.917.625) e Grande Niterói (944.876).</p>
+<p>Os resultados descrevem os dados disponíveis e não permitem, isoladamente, concluir causas para as variações. Para comparações de risco entre municípios, seria necessário incorporar denominadores populacionais e calcular taxas.</p>
+
+<h2>4. Conclusão</h2>
+<p>A análise demonstra a utilidade de um fluxo reproduzível de ETL e de agregações exploratórias para investigar a evolução e a distribuição municipal dos registros de ocorrências. Como próximos passos, recomenda-se incorporar dados populacionais oficiais, calcular taxas por 100 mil habitantes, aprofundar a análise mensal e validar cada indicador segundo as notas metodológicas do ISP-RJ.</p>
+
+<h2>5. Reprodutibilidade e princípios FAIR</h2>
+<p>O código de processamento, o dicionário de dados e este artigo estão organizados no repositório. Para reproduzir: instale as dependências com <code>pip install -r requirements.txt</code>, coloque a planilha oficial em <code>data/raw/BaseMunicipioMensal.xlsx</code> e execute <code>python src/etl.py</code>. Os dados têm origem identificada, as variáveis são documentadas e o processamento é automatizado. A planilha original não é redistribuída neste pacote.</p>
+
+<h2>Referências</h2>
+<p>INSTITUTO DE SEGURANÇA PÚBLICA DO RIO DE JANEIRO (ISP-RJ). <em>Dados Abertos — Série histórica / base municipal mensal</em>. Disponível em: <a href="https://www.ispdados.rj.gov.br/SN/SN2026--ano-base-2025-.html">https://www.ispdados.rj.gov.br/SN/SN2026--ano-base-2025-.html</a>. Acesso em: 11 nov. 2026.</p>
+</main></body></html>
